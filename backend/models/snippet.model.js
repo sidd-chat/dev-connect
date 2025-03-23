@@ -13,5 +13,5 @@ const snippetSchema = new Schema({
   createdAt: {type: Date, default: Date.now}
 })
 
-const SnippetModel = mongoose.model('SnippetModel', snippetSchema);
-module.exports = SnippetModel;
+const Snippet = mongoose.model('Snippet', snippetSchema);
+module.exports = Snippet;

@@ -36,7 +36,7 @@ const Dashboard = () => {
       <div className='flex flex-col bg-neutral-950 rounded-xl shadow-lg px-10 pt-10 pb-5 border-2 border-dashed'>
         <input
           type='text'
-          className='mb-5 text-xl capitalize bg-neutral-950 outline-none'
+          className='mb-5 text-xl text-white capitalize bg-neutral-950 outline-none'
           placeholder='What did you code today?'
           value={title}
           onChange={e => setTitle(e.target.value)}
@@ -49,7 +49,7 @@ const Dashboard = () => {
         />
 
         <textarea
-          className='w-xl h-xs text-xs outline-none rounded-b-xl p-3 mt-3 bg-neutral-950'
+          className='w-xl h-xs text-xs text-white outline-none rounded-b-xl p-3 mt-3 bg-neutral-950'
           placeholder='Caption...'
           value={caption}
           onChange={(e) => setCaption(e.target.value)}
