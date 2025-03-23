@@ -3,6 +3,7 @@ import React from 'react'
 import { TbLayoutSidebarLeftCollapse } from "react-icons/tb";
 import { PiHamburger } from "react-icons/pi";
 
+// to toggle sidebar, more info:
 // https://www.youtube.com/watch?v=NFrFhBJPTmI
 
 const Sidebar = ({children}) => {
