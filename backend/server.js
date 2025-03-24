@@ -7,7 +7,7 @@ const Snippet = require('./models/snippet.model');
 const Review = require('./models/review.model');
 
 const jwt = require('jsonwebtoken');
-const { authMiddleware } = require('./tokenValidationMiddleware');
+const authMiddleware = require('./tokenValidationMiddleware');
 const bcrypt = require('bcrypt');
 
 const express = require('express');
@@ -46,7 +46,6 @@ app.post('/signup', async (req, res) => {
       ]
     });
     if(isUser) {
-      console.log(isUser._id);
       return res.status(400).json({
         error: true,
         message: "User Already Exists!"
@@ -125,6 +124,57 @@ app.post('/login', async (req, res) => {
     console.error("Login Error:", err);
     res.status(500).json({ message: "Server error" });
   }
+});
+
+app.post('/add-snippet', authMiddleware, async (req, res) => {
+  try {
+    const { title, snippetCode, caption } = req.body;
+    const user = req.user;
+
+    if (!user) {
+      return res.status(401).json({
+        error: true,
+        message: 'Unauthorized! Please log in.',
+      });
+    }
+
+    // Check condition for title, snippet and or caption
+    // if()
+
+    const snippet = new Snippet({
+      title,
+      snippetCode,
+      caption,
+      language: 'javascript',
+      author: user._id
+    });
+
+    await snippet.save();
+
+    return res.status(201).json({
+      error: false,
+      snippet,
+      message: 'Snippet Created Successfully!'
+    })
+  } catch (err) {
+    return res.status(500).json({
+      error: true,
+      message: `Server Error: ${err}`
+    })
+  }
+});
+
+app.get('/all-snippets', async (req, res) => {
+  const snippets = await Snippet
+    .find({})
+    .populate("author", "username email profilePicture")
+    .sort({ createdAt: -1 });
+
+  return res.status(200).json({
+    error: false,
+    snippets,
+    message: 'All Snippets Retrieved.',
+  });
 });
 
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));

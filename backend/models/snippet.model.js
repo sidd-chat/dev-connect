@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const snippetSchema = new Schema({
   title: {type: String, required: true},
-  code: {type: String, required: true},
+  snippetCode: {type: String, required: true},
   caption: {type: String},
   language: {type: String, required: true},
   author: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},

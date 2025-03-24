@@ -39,6 +39,8 @@ const Login = () => {
   async function onSubmit(user) {
     try {
       const response = await axios.post('http://localhost:5000/login', user);
+
+      localStorage.setItem('token', response.data.token);
       console.log("Login successful:", response.data);
 
       navigate('/');

@@ -9,7 +9,7 @@ import { PiHamburger } from "react-icons/pi";
 const Sidebar = ({children}) => {
   return (
     <aside className='fixed z-10 h-screen w-75'>
-      <nav className='h-full flex flex-col bg-neutral-950 border-r-neutral-400 rounded-r-md shadow-md'>
+      <nav className='h-full flex flex-col bg-black border-r-neutral-400 rounded-r-md shadow-md'>
         <div className='p-4 pb-2 flex justify-between items-center'>
           <img src='../../vite.svg' alt='logo' className=''/>
           <TbLayoutSidebarLeftCollapse className='p-2 w-10 h-10 rounded-full hover:bg-neutral-900 cursor-pointer text-white'/>
@@ -21,9 +21,9 @@ const Sidebar = ({children}) => {
 
         <div className='border-t border-dashed flex pt-5 mb-2 p-3'>
           <img
-            src='https://placehold.co/100x100/purple/black'
+            src='https://placehold.co/100x100/orange/black'
             alt='User Dispay Picture'
-            className='w-10 h-10 rounded-full'
+            className='w-12 h-12 rounded-xl'
           />
 
           <div className='flex justify-between items-center w-52 ml-3'>

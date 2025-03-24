@@ -6,7 +6,7 @@ const SidebarElement = ({ icon, text, alert, active }) => {
       {icon}
       <span className='w-52 ml-3'>{text}</span>
 
-      {alert && <div className={`absolute left-5 top-2 w-2 h-2 rounded bg-purple-600`} />}
+      {alert && <div className={`absolute left-5 top-2 w-2 h-2 rounded bg-yellow-500`} />}
     </li>
   )
 }

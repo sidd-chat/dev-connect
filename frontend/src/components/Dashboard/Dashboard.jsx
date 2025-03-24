@@ -1,10 +1,11 @@
-import React, { useId, useState } from 'react'
-
-import Editor from '../CodeEditor/Editor'
+import React, { useState, useEffect } from 'react'
 
 import { FaArrowTurnUp } from "react-icons/fa6";
+
+import Editor from '../CodeEditor/Editor'
 import Snippets from './Snippets';
 
+import axios from 'axios';
 
 const Dashboard = () => {
   const [code, setCode] = useState('');
@@ -12,23 +13,57 @@ const Dashboard = () => {
   const [caption, setCaption] = useState('');
   const [snippets, setSnippets] = useState([]);
 
-  const id = useId();
+  useEffect(() => {
+    const fetchSnippets = async () => {
+      try {
+        const response = await axios.get('http://localhost:5000/all-snippets');
+        setSnippets(response.data.snippets);
+      } catch (error) {
+        console.log("Error Fetching Snippets:", error);
+      }
+    }
 
-  const handlePost = () => {
-    // ! Handle Empty Submissions
+    fetchSnippets();
+  }, [])
+
+  const handlePost = async () => {
+    // ! Handle Empty Submissions... later
+
+    // !
+    const token = localStorage.getItem('token');
+
+    if (!token) {
+      console.log('No token found. Please log in.');
+      return;
+    }
 
     const snippet = {
-      _id: id,
       title: title,
-      caption: caption,
-      code: code
+      snippetCode: code,
+      caption: caption
+    }
+
+    console.log(snippet)
+
+    try {
+      const response = await axios.post(
+        'http://localhost:5000/add-snippet',
+        snippet,
+        {
+          headers: {
+            authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log('Snippet Added:', response.data);
+      setSnippets(prevSnippets => [response.data.snippet, ...prevSnippets]);
+    } catch (err) {
+      console.log('Error Posting Snippet:', err.response?.data || err.message);
     }
 
     setTitle('');
     setCaption('');
     setCode('');
-
-    setSnippets([snippet, ...snippets]);
   }
 
   return (
@@ -56,7 +91,7 @@ const Dashboard = () => {
         />
 
         <div className='mt-7 mr-0 ml-auto flex items-center gap-2'>
-          <FaArrowTurnUp className='rotate-90 text-lg'/>
+          <FaArrowTurnUp className='rotate-90 text-lg text-white'/>
           <button
             className='rounded-full px-4 py-2 bg-transparent text-white font-semibold hover:bg-purple-600 hover:cursor-pointer transition duration-400 uppercase'
             onClick={handlePost}
@@ -68,7 +103,7 @@ const Dashboard = () => {
 
       <hr className='bg-white w-full h-0.5 mt-5'/>
 
-      <Snippets snippets={snippets}/>
+      <Snippets snippets={ snippets }/>
     </main>
   )
 }
