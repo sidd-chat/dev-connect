@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { FaArrowTurnUp } from "react-icons/fa6";
 
 import Editor from '../CodeEditor/Editor'
-import Snippets from './Snippets';
+import SnippetsFeed from './SnippetsFeed';
 
 import axios from 'axios';
 
@@ -103,7 +103,7 @@ const Dashboard = () => {
 
       <hr className='bg-white w-full h-0.5 mt-5'/>
 
-      <Snippets snippets={ snippets }/>
+      <SnippetsFeed snippets={ snippets }/>
     </main>
   )
 }
