@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import Snippets from './Snippets';
+import Snippet from './Snippet';
 
 const SnippetsFeed = ({ snippets }) => {
   const [starStates, setStarStates] = useState({}); // Stores starHover & selectedStar per snippet
@@ -21,7 +21,7 @@ const SnippetsFeed = ({ snippets }) => {
         const selectedStar = starStates[snippet._id]?.selectedStar || 0;
 
         return (
-          <Snippets
+          <Snippet
             key={snippet._id}
             snippet={snippet}
             starHover={starHover}

@@ -4,7 +4,7 @@ import Editor from '../CodeEditor/Editor';
 import SnippetReview from './SnippetReview';
 import SnippetProfileInfo from './SnippetProfileInfo';
 
-const Snippets = ({ snippet, starHover, selectedStar, setStarStates, handleStar }) => {
+const Snippet = ({ snippet, starHover, selectedStar, setStarStates, handleStar }) => {
   return (
     <div className="p-5 mb-4 bg-black rounded-xl shadow-lg flex flex-col px-10 pt-10 pb-5 border-2">
       <h2 className="text-xl font-semibold mb-5 capitalize">{snippet.title}</h2>
@@ -26,4 +26,4 @@ const Snippets = ({ snippet, starHover, selectedStar, setStarStates, handleStar 
   );
 }
 
-export default Snippets
+export default Snippet

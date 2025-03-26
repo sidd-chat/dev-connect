@@ -177,4 +177,130 @@ app.get('/all-snippets', async (req, res) => {
   });
 });
 
+app.get('/snippet/:id/reviews', async (req, res) => {
+  const snippetId = req.params.id;
+
+  const review = await Review
+    .find({ snippet: snippetId })
+    .sort({ createdAt: -1 })
+
+  return res.status(200).json({
+    error: false,
+    review,
+    message: 'Reviews Retrieved Successfully.'
+  });
+});
+
+app.post('/snippet/:id/reviews/post-star', authMiddleware, async (req, res) => {
+  try {
+    const snippetId = req.params.id;
+    const { starRating } = req.body;
+    const userId = req.user._id;
+
+    const snippet = await Snippet.findOne({ _id: snippetId });
+    if(!snippet) {
+      res.status(404).json({
+        error: true,
+        message: 'Snippet Not Found!'
+      });
+    }
+
+    const existingReview = await Review.findOne({ snippet: snippetId, user: userId });
+
+    if (existingReview) {
+      return res.status(409).json({  // 409 Conflict status
+        error: true,
+        message: 'User already rated this snippet. Use PUT request to update rating.'
+      });
+    }
+
+    const review = new Review({
+      snippet: snippetId,
+      user: userId,
+      stars: starRating
+    });
+    await review.save();
+
+    snippet.reviews.push(review._id);
+    await snippet.save();
+
+    return res.status(201).json({
+      error: false,
+      reviews: snippet.reviews,
+      message: 'Snippet Starred Successfully.'
+    });
+  } catch (err) {
+    res.status(500).json({ error: true, message: `Server Error: ${err}` });
+  }
+});
+
+app.put('/snippet/:idSnippet/reviews/update-star', authMiddleware, async (req, res) => {
+  try {
+    const snippetId = req.params.idSnippet;
+    const { starRating } = req.body;
+    const userId = req.user._id;
+
+    const snippet = await Snippet.findOne({ _id: snippetId });
+    if(!snippet) {
+      res.status(404).json({
+        error: true,
+        message: 'Snippet Not Found!'
+      });
+    }
+
+    const review = await Review.findOneAndUpdate(
+      { snippet: snippetId, user: userId },
+      { stars: starRating },
+      { new: true } // Ensures that the function returns the updated review instead of the old one.
+    );
+    if(!review) {
+      res.status(404).json({
+        error: true,
+        message: 'Review Not Found! Send Post Request Instead.'
+      });
+    }
+
+    return res.status(200).json({
+      error: false,
+      review,
+      message: 'Star Rating Updated Successfully.'
+    })
+  } catch (err) {
+    res.status(500).json({ error: true, message: `Server Error: ${err}` });
+  }
+});
+
+app.post('/snippet/:id/reviews/post-comment', authMiddleware, async (req, res) => {
+  try {
+    const snippetId = req.params.id;
+    const { comment } = req.body;
+    const userId = req.user._id;
+
+    if(!comment) {
+      res.status(400).json({
+        error: true,
+        message: 'Comment Cannot Be Empty!'
+      });
+    }
+
+    const snippet = await Snippet.findOne({ _id: snippetId });
+    if(!snippet) {
+      res.status(404).json({
+        error: true,
+        message: 'Snippet Not Found!'
+      });
+    }
+
+    snippet.reviews.push({ snippet: snippetId, user: userId, comment: comment });
+    await snippet.save();
+
+    return res.status(201).json({
+      error: false,
+      reviews: snippet.reviews,
+      message: 'Snippet Starred Successfully.'
+    });
+  } catch (err) {
+    res.status(500).json({ error: true, message: `Server Error: ${err}` });
+  }
+});
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));

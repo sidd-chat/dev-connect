@@ -7,8 +7,6 @@ const snippetSchema = new Schema({
   caption: {type: String},
   language: {type: String, required: true},
   author: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
-  stars: {type: Number, default: 0},
-  shares: {type: Number, default: 0},
   reviews: [{type: mongoose.Schema.Types.ObjectId, ref: 'Review'}],
   createdAt: {type: Date, default: Date.now}
 })
