@@ -9,7 +9,7 @@ const userSchema = new Schema({
   bio: {type: String, default: ''},
   followers: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
   following: [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
-  savedSnippets: [{type: mongoose.Schema.Types.ObjectId, ref: 'Snippet'}],
+  postedSnippets: [{type: mongoose.Schema.Types.ObjectId, ref: 'Snippet'}],
   createdAt: {type: Date, default: Date.now}
 })
 

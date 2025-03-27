@@ -18,7 +18,7 @@ const Snippet = ({ snippet, starStates, handleStar }) => {
       )}
 
       <div className="flex items-center justify-between mt-10 mb-5">
-        <SnippetProfileInfo snippet={snippet} />
+        {snippet.author?.username && <SnippetProfileInfo snippet={snippet} />}
         <SnippetReview snippet={snippet} starStates={starStates} handleStar={handleStar} />
       </div>
     </div>

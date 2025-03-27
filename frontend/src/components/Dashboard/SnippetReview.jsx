@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { FaRegStar, FaShare } from 'react-icons/fa6';
 import { MdOutlineModeComment } from 'react-icons/md';
 
+import { LuPencil } from "react-icons/lu";
+import { AiFillDelete } from "react-icons/ai";
+
 import StarRating from './StarRating';
 import { useAuth } from '@/context/AuthContext';
 
@@ -11,7 +14,8 @@ import axios from 'axios';
 const SnippetReview = ({ snippet, starStates, handleStar }) => {
   const [reviews, setReviews] = useState([]);
 
-  const { userId } = useAuth();
+  const { user } = useAuth();
+  const userId = user?._id;
 
   useEffect(() => {
     const getReviews = async () => {
@@ -26,10 +30,11 @@ const SnippetReview = ({ snippet, starStates, handleStar }) => {
     getReviews();
   }, [snippet._id]);
 
-  if(userId === snippet._id) {
+  if(userId === snippet.author) {
     return (
       <div className="mr-0 ml-auto flex gap-5 relative">
-        <h2>Edit Note</h2>
+        <LuPencil size={20} className="text-white hover:text-yellow-500 cursor-pointer"/>
+        <AiFillDelete size={24} className="text-white hover:text-red-500 cursor-pointer"/>
       </div>
     )
   } else {

@@ -43,7 +43,7 @@ const Login = () => {
       localStorage.setItem('token', response.data.token);
       console.log("Login successful:", response.data);
 
-      navigate('/');
+      navigate('/', {replace: true});
     } catch (err) {
       console.error("Login failed:", err.response?.data || err.message);
     }

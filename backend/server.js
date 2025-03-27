@@ -303,4 +303,38 @@ app.post('/snippet/:id/reviews/post-comment', authMiddleware, async (req, res) =
     res.status(500).json({ error: true, message: `Server Error: ${err}` });
   }
 });
+
+app.get('/profile/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const userDetails = await User.findOne({ _id: id });
+
+    return res.status(200).json({
+      error: false,
+      userDetails,
+      message: 'User Details Retrived Succesfully.'
+    });
+  } catch (err) {
+    console.log('Could Not Retrive Profile Details! Server Error:', err);
+  }
+});
+
+app.get('/profile/:id/snippets', async (req, res) => {
+  try {
+    const authorId = req.params.id;
+
+    const snippets = await Snippet
+      .find({ author: authorId })
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json({
+      error: false,
+      snippets,
+      message: 'User Details Retrived Succesfully.'
+    });
+  } catch (err) {
+    console.log('Could Not Retrive Snippet Details! Server Error:', err);
+  }
+});
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));

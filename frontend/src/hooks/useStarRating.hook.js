@@ -1,9 +1,11 @@
 import { useState } from 'react';
 
+import axios from 'axios';
+
 const useStarRating = () => {
   const [starStates, setStarStates] = useState({});
 
-  const handleStar = (snippetId, rating, hover = null) => {
+  const handleStar = async (snippetId, rating, hover = null) => {
     setStarStates((prev) => ({
       ...prev,
       [snippetId]: {
@@ -14,8 +16,22 @@ const useStarRating = () => {
     }));
 
     if (rating !== null) {
-      // API call to update rating in DB
-      console.log(`Updating rating for snippet ${snippetId} to ${rating}`);
+      try {
+        const token = localStorage.getItem('token');
+
+        const response = await axios.post(
+          `http://localhost:5000/snippet/${snippetId}/reviews/post-star`,
+          { starRating: rating },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+        console.log(`Updating rating for snippet ${snippetId} to ${rating}`, response.data);
+      } catch (err) {
+        console.log('Error Updating Rating:', err.response.data);
+      }
     }
   };
 

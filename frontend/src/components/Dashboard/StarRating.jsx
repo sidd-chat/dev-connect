@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { FaRegStar } from 'react-icons/fa6';
 
@@ -6,26 +6,42 @@ import { useAuth } from '@/context/AuthContext';
 
 
 const StarRating = ({ snippetId, author, starStates, handleStar }) => {
-  const starHover = starStates[snippetId]?.starHover || false;
-  const selectedStar = starStates[snippetId]?.selectedStar || 0;
+  const [showStars, setShowStars] = useState(false);
 
-  const { userId } = useAuth();
+
+  // Hide stars only if mouse leaves downward (not if moving towards stars)
+  const handleMouseLeave = (e) => {
+    // if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) {
+    //   setShowStars(false);
+    // }
+  };
+
+  const starHover = starStates[snippetId]?.starHover || false;
+  const selectedStar = starStates[snippetId]?.selectedStar || 0;  // ! use author to init by first fetching snippet review
+
+  const { user } = useAuth();
+  const userId = user?._id;
 
   return (
-    <div className="relative">
+    <div
+      className="relative"
+      onMouseEnter={() => setShowStars(true)}
+      onMouseLeave={handleMouseLeave}
+    >
       <FaRegStar
         size={22}
         className="text-white hover:text-yellow-600 cursor-pointer"
-        onMouseEnter={() => handleStar(snippetId, null, true)}
-        onMouseLeave={() => handleStar(snippetId, null, false)}
       />
 
-      {starHover && (
-        <div className="absolute bottom-10 right-4.5 bg-transparent border-2 border-dashed p-3 shadow-lg rounded flex gap-2">
+      {showStars && (
+        <div className="absolute bottom-7 right-[-68px] bg-transparent border-2 border-dashed p-3 shadow-lg rounded flex gap-2"
+        onMouseEnter={() => setShowStars(true)}
+        onMouseLeave={() => setShowStars(false)}
+        >
           {[1, 2, 3, 4, 5].map((num) => (
             <FaRegStar
               key={num}
-              className={`cursor-pointer text-xl ${num <= selectedStar ? 'fill-yellow-300' : 'text-gray-300'}`}
+              className={`cursor-pointer text-xl hover:text-yellow-300 ${num <= selectedStar ? 'fill-yellow-500' : 'text-gray-300'}`}
               onClick={() => handleStar(snippetId, num)}
             />
           ))}
