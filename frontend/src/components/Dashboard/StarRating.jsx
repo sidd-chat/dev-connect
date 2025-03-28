@@ -8,6 +8,11 @@ import { useAuth } from '@/context/AuthContext';
 const StarRating = ({ snippetId, author, starStates, handleStar }) => {
   const [showStars, setShowStars] = useState(false);
 
+  const starHover = starStates[snippetId]?.starHover || false;
+  const selectedStar = starStates[snippetId]?.selectedStar || 0;  // ! use author to init by first fetching snippet review
+
+  const { user } = useAuth();
+  const userId = user?._id;
 
   // Hide stars only if mouse leaves downward (not if moving towards stars)
   const handleMouseLeave = (e) => {
@@ -16,17 +21,12 @@ const StarRating = ({ snippetId, author, starStates, handleStar }) => {
     // }
   };
 
-  const starHover = starStates[snippetId]?.starHover || false;
-  const selectedStar = starStates[snippetId]?.selectedStar || 0;  // ! use author to init by first fetching snippet review
-
-  const { user } = useAuth();
-  const userId = user?._id;
-
   return (
     <div
       className="relative"
-      onMouseEnter={() => setShowStars(true)}
-      onMouseLeave={handleMouseLeave}
+      // onMouseEnter={() => setShowStars(true)}
+      // onMouseLeave={() => setShowStars(false)}
+      onClick={() => setShowStars(curr => !curr)}
     >
       <FaRegStar
         size={22}
