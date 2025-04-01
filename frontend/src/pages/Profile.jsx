@@ -12,22 +12,22 @@ const Profile = () => {
 
   useEffect(() => {
     const getUserDetails = async () => {
-      // console.log(userId);
       const userDetails = await axios.get(`http://localhost:5000/profile/${userId}`);
       setUser(userDetails.data.userDetails);
     }
 
     getUserDetails();
-  });
+  }, [userId]);
 
   useEffect(() => {
     const getSnippets = async () => {
       const snippetDetails = await axios.get(`http://localhost:5000/profile/${userId}/snippets`);
+      console.log(snippetDetails.data.snippets)
       setSnippets(snippetDetails.data.snippets);
     }
 
     getSnippets();
-  });
+  }, []);
 
   return (
     <main>
@@ -55,7 +55,7 @@ const Profile = () => {
         <hr className='h-0.5 w-[50%] bg-white overflow-hidden my-10'/>
 
         <h2 className='text-xl text-white'>{"Posted Snippets ->"}</h2>
-        <SnippetsFeed snippets={snippets}/>
+        <SnippetsFeed snippetsProp={snippets}/>
       </div>
     </main>
   )

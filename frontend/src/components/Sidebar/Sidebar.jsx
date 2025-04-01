@@ -3,10 +3,12 @@ import { useNavigate } from 'react-router-dom';
 
 import { TbLayoutSidebarLeftCollapse } from "react-icons/tb";
 import { RiHome3Line } from "react-icons/ri";
-import { CiSearch } from "react-icons/ci";
+import { IoSearch } from "react-icons/io5";
 import { LuMessageCircleDashed } from "react-icons/lu";
 import { IoSettingsOutline } from "react-icons/io5";
 import { FaCode } from "react-icons/fa6";
+import { BsCurrencyDollar } from "react-icons/bs";
+
 
 import SidebarElement from './SidebarElement';
 import { useAuth } from '@/context/AuthContext';
@@ -39,8 +41,9 @@ const Sidebar = () => {
 
         <ul className='flex-1 py-3'>
           <SidebarElement icon={<RiHome3Line size={24}/>} text='Home' active expanded={expanded}/>
-          <SidebarElement icon={<CiSearch size={24}/>} text='Search' expanded={expanded}/>
-          <SidebarElement icon={<FaCode size={24}/>} text='Collaborate' expanded={expanded}/>
+          <SidebarElement icon={<IoSearch size={22}/>} text='Search' expanded={expanded}/>
+          <SidebarElement icon={<BsCurrencyDollar size={23}/>} text='Bounties Board' expanded={expanded}/>
+          <SidebarElement icon={<FaCode size={23}/>} text='Collaborate' expanded={expanded}/>
           <SidebarElement icon={<LuMessageCircleDashed size={24}/>} text='Messages' alert expanded={expanded}/>
           <SidebarElement icon={<IoSettingsOutline size={24}/>} text='Settings' expanded={expanded}/>
         </ul>

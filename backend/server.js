@@ -180,13 +180,13 @@ app.get('/all-snippets', async (req, res) => {
 app.get('/snippet/:id/reviews', async (req, res) => {
   const snippetId = req.params.id;
 
-  const review = await Review
+  const reviews = await Review
     .find({ snippet: snippetId })
     .sort({ createdAt: -1 })
 
   return res.status(200).json({
     error: false,
-    review,
+    reviews,
     message: 'Reviews Retrieved Successfully.'
   });
 });
@@ -199,7 +199,7 @@ app.post('/snippet/:id/reviews/post-star', authMiddleware, async (req, res) => {
 
     const snippet = await Snippet.findOne({ _id: snippetId });
     if(!snippet) {
-      res.status(404).json({
+      return res.status(404).json({
         error: true,
         message: 'Snippet Not Found!'
       });
@@ -270,40 +270,6 @@ app.put('/snippet/:idSnippet/reviews/update-star', authMiddleware, async (req, r
   }
 });
 
-app.post('/snippet/:id/reviews/post-comment', authMiddleware, async (req, res) => {
-  try {
-    const snippetId = req.params.id;
-    const { comment } = req.body;
-    const userId = req.user._id;
-
-    if(!comment) {
-      res.status(400).json({
-        error: true,
-        message: 'Comment Cannot Be Empty!'
-      });
-    }
-
-    const snippet = await Snippet.findOne({ _id: snippetId });
-    if(!snippet) {
-      res.status(404).json({
-        error: true,
-        message: 'Snippet Not Found!'
-      });
-    }
-
-    snippet.reviews.push({ snippet: snippetId, user: userId, comment: comment });
-    await snippet.save();
-
-    return res.status(201).json({
-      error: false,
-      reviews: snippet.reviews,
-      message: 'Snippet Starred Successfully.'
-    });
-  } catch (err) {
-    res.status(500).json({ error: true, message: `Server Error: ${err}` });
-  }
-});
-
 app.get('/profile/:id', async (req, res) => {
   try {
     const id = req.params.id;
@@ -322,10 +288,10 @@ app.get('/profile/:id', async (req, res) => {
 
 app.get('/profile/:id/snippets', async (req, res) => {
   try {
-    const authorId = req.params.id;
+    const id = req.params.id;
 
     const snippets = await Snippet
-      .find({ author: authorId })
+      .find({ author: id })
       .sort({ createdAt: -1 });
 
     return res.status(200).json({
@@ -335,6 +301,92 @@ app.get('/profile/:id/snippets', async (req, res) => {
     });
   } catch (err) {
     console.log('Could Not Retrive Snippet Details! Server Error:', err);
+  }
+});
+
+app.get('/snippet/:id/reviews/comments', async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const comments = await Review.find({ snippet: id });
+
+    return res.status(200).json({
+      error: false,
+      comments,
+      message: 'Comments Retrieved Successfully.'
+    })
+  } catch (err) {
+    return res.status(500).json({
+      error: true,
+      message: `Error fetching comments: ${err}`
+    })
+  }
+});
+
+app.delete('/snippet/:id', authMiddleware, async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const result = await Snippet.deleteOne({ _id: id });
+
+    if (result.deletedCount === 1) {
+      return res.status(200).json({
+        error: false,
+        result,
+        message: "Snippet Deleted Successfully."
+      });
+    } else {
+      return res.status(404).json({
+        error: true,
+        message: "Snippet Not Found!"
+      });
+    }
+  } catch(err) {
+      console.log('Error Deleting Snippet:', err);
+      res.status(500).json({
+        error: true,
+        message: 'Failed to Delete Snippet'
+      });
+  }
+});
+
+app.post('/snippet/:id/reviews/post-comment', authMiddleware, async (req, res) => {
+  try {
+    const snippetId = req.params.id;
+    const { comment } = req.body;
+    const userId = req.user._id;
+
+    if(!comment) {
+      return res.status(400).json({
+        error: true,
+        message: 'Comment Cannot Be Empty!'
+      });
+    }
+
+    const snippet = await Snippet.findOne({ _id: snippetId });
+    if(!snippet) {
+      return res.status(404).json({
+        error: true,
+        message: 'Snippet Not Found!'
+      });
+    }
+
+    const newReview = new Review({
+      snippet: snippetId,
+      user: userId,
+      comment: comment
+    })
+    await newReview.save();
+
+    return res.status(201).json({
+      error: false,
+      reviews: snippet.reviews,
+      message: 'Comment Added Successfully.'
+    });
+  } catch (err) {
+    return res.status(500).json({
+      error: true, message: `Server Error: ${err}`
+    });
   }
 });
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));
