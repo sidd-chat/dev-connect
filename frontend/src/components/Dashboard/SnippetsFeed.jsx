@@ -5,7 +5,7 @@ import Snippet from './Snippet';
 import useStarRating from '../../hooks/useStarRating.hook';
 import { useSnippets } from '@/context/SnippetsContext';
 
-const SnippetsFeed = ({ snippetsProp }) => {
+const SnippetsFeed = ({ snippetsProp, userId }) => {
   const { snippets } = useSnippets();
   const { starStates, handleStar } = useStarRating();
 
@@ -18,7 +18,7 @@ const SnippetsFeed = ({ snippetsProp }) => {
   return (
     <div className="mx-auto py-5 text-white">
       {snippetsToDisplay.map((snippet) => (
-        <Snippet key={snippet._id} snippet={snippet} starStates={starStates} handleStar={handleStar} />
+        <Snippet key={snippet._id} snippet={snippet} starStates={starStates} handleStar={handleStar} userId={userId}/>
       ))}
     </div>
   );

@@ -27,7 +27,7 @@ const Profile = () => {
     }
 
     getSnippets();
-  }, []);
+  }, [userId]);
 
   return (
     <main>
@@ -55,7 +55,7 @@ const Profile = () => {
         <hr className='h-0.5 w-[50%] bg-white overflow-hidden my-10'/>
 
         <h2 className='text-xl text-white'>{"Posted Snippets ->"}</h2>
-        <SnippetsFeed snippetsProp={snippets}/>
+        <SnippetsFeed snippetsProp={snippets} userId={userId}/>
       </div>
     </main>
   )
