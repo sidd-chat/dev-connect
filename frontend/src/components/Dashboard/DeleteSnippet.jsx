@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useSnippets } from '@/context/SnippetsContext';
 
 const DeleteSnippet = ({ snippetId }) => {
-  const { snippets, setSnippets } = useSnippets();
+  const { setSnippets } = useSnippets();
 
   const deleteSnippet = async () => {
     try {

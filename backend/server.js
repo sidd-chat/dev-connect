@@ -308,7 +308,14 @@ app.get('/snippet/:id/reviews/comments', async (req, res) => {
   try {
     const id = req.params.id;
 
-    const comments = await Review.find({ snippet: id });
+    const comments = await Review.find({ snippet: id }).populate('user', 'username email profilePicture').sort({ createdAt: -1 });
+
+    if (!comments || comments.length === 0) {
+      return res.status(404).json({
+        error: true,
+        message: 'No Comments Found!'
+      });
+    }
 
     return res.status(200).json({
       error: false,
@@ -320,33 +327,6 @@ app.get('/snippet/:id/reviews/comments', async (req, res) => {
       error: true,
       message: `Error fetching comments: ${err}`
     })
-  }
-});
-
-app.delete('/snippet/:id', authMiddleware, async (req, res) => {
-  try {
-    const id = req.params.id;
-
-    const result = await Snippet.deleteOne({ _id: id });
-
-    if (result.deletedCount === 1) {
-      return res.status(200).json({
-        error: false,
-        result,
-        message: "Snippet Deleted Successfully."
-      });
-    } else {
-      return res.status(404).json({
-        error: true,
-        message: "Snippet Not Found!"
-      });
-    }
-  } catch(err) {
-      console.log('Error Deleting Snippet:', err);
-      res.status(500).json({
-        error: true,
-        message: 'Failed to Delete Snippet'
-      });
   }
 });
 
@@ -378,9 +358,10 @@ app.post('/snippet/:id/reviews/post-comment', authMiddleware, async (req, res) =
     })
     await newReview.save();
 
+    const populatedReview = await Review.findById(newReview._id).populate('user', 'username email profilePicture');
     return res.status(201).json({
       error: false,
-      reviews: snippet.reviews,
+      comment: populatedReview,
       message: 'Comment Added Successfully.'
     });
   } catch (err) {
@@ -389,4 +370,91 @@ app.post('/snippet/:id/reviews/post-comment', authMiddleware, async (req, res) =
     });
   }
 });
+
+app.delete('/snippet/:id/reviews/delete-comment', authMiddleware, async (req, res) => {
+  try {
+    const id = req.params.id;
+    const userId = req.user._id;
+
+    const review = await Review.findOneAndDelete({ _id: id, user: userId });
+    if(!review) {
+      return res.status(404).json({
+        error: true,
+        message: 'Comment Not Found!'
+      });
+    }
+
+    return res.status(200).json({
+      error: false,
+      review,
+      message: 'Comment Deleted Successfully.'
+    });
+  } catch (err) {
+    return res.status(500).json({
+      error: true,
+      message: `Error deleting comment: ${err}`
+    })
+  }
+});
+
+app.delete('/snippet/:id', authMiddleware, async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    const result = await Snippet.deleteOne({ _id: id });
+
+    if (result.deletedCount === 1) {
+      return res.status(200).json({
+        error: false,
+        result,
+        message: "Snippet Deleted Successfully."
+      });
+    } else {
+      return res.status(404).json({
+        error: true,
+        message: "Snippet Not Found!"
+      });
+    }
+  } catch(err) {
+      console.log('Error Deleting Snippet:', err);
+      res.status(500).json({
+        error: true,
+        message: 'Failed to Delete Snippet'
+      });
+  }
+});
+
+app.get('/snippet/:id/reviews/get-stars', authMiddleware, async (req, res) => {
+  try {
+    const id = req.params.id;
+    const userId = req.user._id;
+
+    const snippet = await Snippet.findOne({ _id: id })
+      .populate({
+        path: 'reviews',
+        select: 'user stars',
+        populate: {
+          path: 'user',
+          select: '_id'
+        }
+      });
+
+    if (!snippet) {
+      return res.status(404).json({ error: true, message: 'Snippet not found' });
+    }
+    const userReview = snippet.reviews.find(review => review.user._id.equals(userId));
+
+    return res.status(200).json({
+      error: false,
+      stars: userReview ? userReview.stars : 0,
+      reviews: snippet.reviews,
+      message: 'Stars Retrieved Successfully.'
+    })
+  } catch (err) {
+    return res.status(500).json({
+      error: true,
+      message: `Error fetching stars: ${err}`
+    })
+  }
+})
 app.listen(PORT, () => console.log(`🚀 Server running on http://localhost:${PORT}`));

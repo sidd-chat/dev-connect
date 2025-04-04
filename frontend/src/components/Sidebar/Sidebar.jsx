@@ -40,12 +40,12 @@ const Sidebar = () => {
         </div>
 
         <ul className='flex-1 py-3'>
-          <SidebarElement icon={<RiHome3Line size={24}/>} text='Home' active expanded={expanded}/>
-          <SidebarElement icon={<IoSearch size={22}/>} text='Search' expanded={expanded}/>
-          <SidebarElement icon={<BsCurrencyDollar size={23}/>} text='Bounties Board' expanded={expanded}/>
-          <SidebarElement icon={<FaCode size={23}/>} text='Collaborate' expanded={expanded}/>
-          <SidebarElement icon={<LuMessageCircleDashed size={24}/>} text='Messages' alert expanded={expanded}/>
-          <SidebarElement icon={<IoSettingsOutline size={24}/>} text='Settings' expanded={expanded}/>
+          <SidebarElement icon={<RiHome3Line size={24}/>} text='Home' active expanded={expanded} link='/'/>
+          <SidebarElement icon={<IoSearch size={22}/>} text='Search' expanded={expanded} link='/search'/>
+          <SidebarElement icon={<BsCurrencyDollar size={23}/>} text='Bounties Board' expanded={expanded} link='/bounties'/>
+          <SidebarElement icon={<FaCode size={23}/>} text='Collaborate' expanded={expanded} link='/collaborate' />
+          <SidebarElement icon={<LuMessageCircleDashed size={24}/>} text='Messages' alert expanded={expanded} link='/messages'/>
+          <SidebarElement icon={<IoSettingsOutline size={24}/>} text='Settings' expanded={expanded} link='/settings'/>
         </ul>
 
         <UserInfo user={user} expanded={expanded}/>

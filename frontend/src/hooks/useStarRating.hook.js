@@ -30,7 +30,24 @@ const useStarRating = () => {
         );
         console.log(`Updating rating for snippet ${snippetId} to ${rating}`, response.data);
       } catch (err) {
-        console.log('Error Updating Rating:', err.response.data);
+        if(err.response.status !== 409) {
+          console.log('Error Updating Rating:', err.response.data);
+          return;
+        }
+
+        const token = localStorage.getItem('token');
+
+        const response = await axios.put(
+          `http://localhost:5000/snippet/${snippetId}/reviews/update-star`,
+          { starRating: rating },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          }
+        );
+
+        console.log(`Updating rating for snippet ${snippetId} to ${rating}`, response.data);
       }
     }
   };

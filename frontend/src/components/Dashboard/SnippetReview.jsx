@@ -8,7 +8,7 @@ import Comments from './Comments/Comments';
 
 
 const SnippetReview = ({ snippet, starStates, handleStar }) => {
-  const [reviews, setReviews] = useState([]);
+  const [ _ , setReviews] = useState([]);
   useEffect(() => {
     const getReviews = async () => {
       try {
