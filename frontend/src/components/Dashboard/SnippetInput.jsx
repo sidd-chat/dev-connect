@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FaArrowTurnUp } from 'react-icons/fa6'
 import Editor from '../CodeEditor/Editor'
 import axios from 'axios';
@@ -6,11 +6,24 @@ import { useSnippets } from '@/context/SnippetsContext';
 
 
 const SnippetInput = () => {
-  const { setSnippets } = useSnippets();
+  const { setSnippets, snippetToEdit, setSnippetToEdit } = useSnippets();
 
   const [code, setCode] = useState('');
   const [title, setTitle] = useState('');
   const [caption, setCaption] = useState('');
+
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    if(snippetToEdit) {
+      setCode(snippetToEdit.snippetCode || '');
+      setTitle(snippetToEdit.title || '');
+      setCaption(snippetToEdit.caption || '');
+
+      inputRef.current?.focus();
+      inputRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [snippetToEdit]);
 
   const handlePost = async () => {
     // ! Handle Empty Submissions... later
@@ -53,7 +66,10 @@ const SnippetInput = () => {
   }
 
   return (
-    <div className='flex flex-col bg-neutral-950 rounded-xl shadow-lg px-10 pt-10 pb-5 border-2 border-dashed'>
+    <div
+      ref={inputRef}
+      className='flex flex-col bg-neutral-950 rounded-xl shadow-lg px-10 pt-10 pb-5 border-2 border-dashed'
+    >
       <input
         type='text'
         className='mb-5 text-xl text-white capitalize bg-neutral-950 outline-none'

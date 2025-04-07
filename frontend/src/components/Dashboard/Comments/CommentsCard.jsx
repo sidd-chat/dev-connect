@@ -5,12 +5,13 @@ import customParseFormat from 'dayjs/plugin/customParseFormat'
 import StarRating from '../StarRating';
 import { FaRegStar } from 'react-icons/fa6';
 import useStarRating from '@/hooks/useStarRating.hook';
+import EditComment from './EditComment';
+import DeleteComment from './DeleteComment';
 
 dayjs.extend(customParseFormat);
 
-const CommentsCard = ({ commentDetails }) => {
+const CommentsCard = ({ commentDetails, setComments }) => {
   const { comment, createdAt, snippet, user, stars } = {...commentDetails};
-  console.log(comment, user)
   const { starStates, handleStar } = useStarRating();
 
   return (
@@ -26,8 +27,9 @@ const CommentsCard = ({ commentDetails }) => {
           ))}
         </div>
 
-        <div>
-
+        <div className='flex gap-2 items-center justify-center'>
+          <EditComment snippetId={snippet} commentId={commentDetails?._id} setComments={setComments} />
+          <DeleteComment snippetId={snippet} commentId={commentDetails?._id} setComments={setComments} />
         </div>
       </div>
 

@@ -1,12 +1,12 @@
 import React from 'react'
 import CommentsCard from './CommentsCard';
 
-const CommentsFeed = ({ snippetId, comments }) => {
+const CommentsFeed = ({ snippetId, comments, setComments }) => {
 
   return (
     <div>
       {comments.map(comment => {
-        return <CommentsCard key={comment?._id} commentDetails={comment}/>
+        return <CommentsCard key={comment?._id} commentDetails={comment} setComments={setComments}/>
       })}
     </div>
   )

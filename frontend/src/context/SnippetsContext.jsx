@@ -6,8 +6,9 @@ import Loader from "@/components/Loader/Loader";
 const SnippetsContext = createContext();
 
 export const SnippetsProvider = ({ children }) => {
+  const [snippetToEdit, setSnippetToEdit] = useState(null);
   const [snippets, setSnippets] = useState([]);
-  const [ isLoading, setIsLoading ] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchSnippets = async () => {
@@ -29,7 +30,13 @@ export const SnippetsProvider = ({ children }) => {
     )
 
   return (
-    <SnippetsContext.Provider value={{ snippets, setSnippets }}>
+    <SnippetsContext.Provider
+      value={{
+        snippets,
+        setSnippets,
+        snippetToEdit,
+        setSnippetToEdit,
+      }}>
       {children}
     </SnippetsContext.Provider>
   )

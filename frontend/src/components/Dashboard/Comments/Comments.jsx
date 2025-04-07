@@ -79,7 +79,7 @@ const Comments = ({ snippetId, title }) => {
 
             <hr className='my-8 border-2 border-dashed'/>
 
-            <CommentsFeed snippetId={snippetId} comments={comments}/>
+            <CommentsFeed snippetId={snippetId} comments={comments} setComments={setComments}/>
           </div>
 
           <div className='flex justify-between items-center bg-blue border-2 bottom-0 w-full px-5 py-3'>
